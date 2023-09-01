@@ -1,0 +1,78 @@
+name: dev CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev, master]
+
+  schedule:
+    - cron: '30 18 * * *' # run at 00:00 AM IST
+
+jobs:
+  g8:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout ESW repo
+        uses: actions/checkout@v2
+        with:
+          repository: tmtsoftware/esw
+
+      - name: Cache ~/.cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-coursier-${{ hashFiles('project/Libs.scala') }}
+          restore-keys: |
+            ${{ runner.os }}-coursier-
+
+      - name: Cache ~/.sbt
+        uses: actions/cache@v1
+        with:
+          path: ~/.sbt
+          key: ${{ runner.os }}-sbt-${{ hashFiles('project/build.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
+      - name: Publish Local checked out ESW repo
+        run: |
+          sbtn clean 
+          sbtn publishLocal
+
+      - name: Extract branch name (Trigger - PR)
+        if: github.event_name == 'pull_request'
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF})" >> $GITHUB_ENV
+
+      - name: Extract branch name (Trigger - Push)
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        id: extract_branch
+      
+      - name: Set branch name (trigger - Schedule)
+        if: github.event_name == 'schedule'
+        run: echo "BRANCH_NAME=dev" >> $GITHUB_ENV
+
+      - name: create new project from csw-http-service-template.g8 template
+        run: |
+          echo "Running build for branch ${BRANCH_NAME}"
+          g8 tmtsoftware/csw-http-service-template.g8 --name=sample --branch ${BRANCH_NAME}
+
+      - name: Build
+        working-directory: ./sample
+        run: |
+          sbtn clean 
+          sbtn test
+
+      - name: Notify slack
+        if: always()
+        continue-on-error: true
+        uses: kpritam/slack-job-status-action@v1
+        with:
+          job-status: ${{ job.status }}
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ci-dev
