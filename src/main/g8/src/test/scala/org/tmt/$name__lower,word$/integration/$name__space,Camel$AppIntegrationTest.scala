@@ -1,6 +1,5 @@
 package org.tmt.$name;format="lower,word"$.integration
 
-import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.Uri.Path
 import akka.http.scaladsl.model._
@@ -9,7 +8,6 @@ import akka.http.scaladsl.unmarshalling.Unmarshal
 import csw.aas.core.commons.AASConnection
 import csw.location.api.models.Connection.HttpConnection
 import csw.location.api.models._
-import csw.location.api.scaladsl.LocationService
 import csw.network.utils.Networks
 import csw.testkit.scaladsl.ScalaTestFrameworkTestKit
 import io.bullet.borer.Json
@@ -24,7 +22,7 @@ import org.tmt.$name;format="lower,word"$.core.models.{AdminGreetResponse, Greet
 import org.tmt.$name;format="lower,word"$.http.HttpCodecs
 
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.Await
 
 class $name;format="space,Camel"$AppIntegrationTest extends ScalaTestFrameworkTestKit with AnyWordSpecLike with Matchers with HttpCodecs {
   import frameworkTestKit._
