@@ -11,15 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: coursier/setup-action@v1.2.0
+        with:
+          jvm: temurin:1.21
+          apps: sbt sbtn giter8
+      - uses: coursier/cache-action@v6
+
+      - uses: actions/checkout@v4
 
       - name: Checkout ESW repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: tmtsoftware/esw
 
       - name: Cache ~/.cache
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: ~/.cache
           key: ${{ runner.os }}-coursier-${{ hashFiles('project/Libs.scala') }}
@@ -27,7 +33,7 @@ jobs:
             ${{ runner.os }}-coursier-
 
       - name: Cache ~/.sbt
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('project/build.properties') }}
@@ -36,8 +42,8 @@ jobs:
 
       - name: Publish Local checked out ESW repo
         run: |
-          sbtn clean
-          sbtn publishLocal
+          sbt clean
+          sbt publishLocal
 
       - name: create new project from csw-http-service-template.g8 template
         run: |
@@ -46,8 +52,8 @@ jobs:
       - name: Build
         working-directory: ./sample
         run: |
-          sbtn clean 
-          sbtn test
+          sbt clean 
+          sbt test
 
       - name: Notify slack
         if: always()

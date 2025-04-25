@@ -4,7 +4,7 @@ import sbt.Test
 
 lazy val githubRepoUrl = "https://github.com/your-username/your-project"
 
-ThisBuild / scalaVersion := "2.13.8"
+ThisBuild / scalaVersion := "3.6.4"
 ThisBuild / organizationName := "TMT Org"
 ThisBuild / docsRepo := githubRepoUrl
 ThisBuild / docsParentDir := ""
@@ -35,7 +35,7 @@ lazy val `$name;format="norm"$` = project
     Settings.makeSiteMappings(docs),
     inThisBuild (
       List(
-        scalaVersion := "2.13.8",
+        scalaVersion := "3.6.4",
         version := "$version$"
       )
     ),
@@ -45,10 +45,10 @@ lazy val `$name;format="norm"$` = project
       Libs.`esw-http-template-wiring` % "compile->compile;test->test",
       Libs.`embedded-keycloak` % Test,
       Libs.`scalatest` % Test,
-      Libs.`akka-http-testkit` % Test,
+      Libs.`pekko-http-testkit` % Test,
       Libs.`mockito` % Test,
-      Libs.`akka-actor-testkit-typed` % Test,
-      Libs.`akka-stream-testkit` % Test
+      Libs.`pekko-actor-testkit-typed` % Test,
+      Libs.`pekko-stream-testkit` % Test
     ),
     Test / fork := true
   )
