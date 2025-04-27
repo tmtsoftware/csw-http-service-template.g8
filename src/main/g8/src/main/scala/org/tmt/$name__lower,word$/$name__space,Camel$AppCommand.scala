@@ -1,16 +1,16 @@
-package org.tmt.$name;format="lower,word"$
+package org.tmt.$name;format="space,camel"$
 
 import caseapp.{CommandName, ExtraName, HelpMessage}
 
-sealed trait $name;format="space,Camel"$AppCommand
+sealed trait $Name;Format="Space,Camel"$AppCommand
 
-object $name;format="space,Camel"$AppCommand {
+object $Name;Format="Space,Camel"$AppCommand {
 
   @CommandName("start")
-  final case class StartCommand(
-     @HelpMessage("port of the app")
-     @ExtraName("p")
-     port: Option[Int]
-   ) extends $name;format="space,Camel"$AppCommand
+  final case class StartOptions(
+      @HelpMessage("port of the app")
+      @ExtraName("p")
+      port: Option[Int]
+  ) extends $Name;Format="Space,Camel"$AppCommand
 
 }
