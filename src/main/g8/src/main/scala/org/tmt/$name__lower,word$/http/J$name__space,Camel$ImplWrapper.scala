@@ -7,5 +7,5 @@ import scala.jdk.FutureConverters.*
 import scala.concurrent.Future
 
 class J$name;format="space,Camel"$ImplWrapper(j$name;format="space,Camel"$Impl: J$name;format="space,Camel"$Impl) {
-  def sayBye(): Future[GreetResponse] = j$name;format="space,Camel"$Impl.sayBye().toScala
+  def sayBye(): Future[GreetResponse] = j$name;format="space,Camel"$Impl.sayBye().asScala
 }
