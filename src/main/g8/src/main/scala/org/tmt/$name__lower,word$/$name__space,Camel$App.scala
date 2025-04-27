@@ -1,4 +1,4 @@
-package org.tmt.$name;format="space,Camel"$
+package org.tmt.$name;format="lower,word"$
 
 import caseapp.core.RemainingArgs
 import csw.location.api.models.Metadata
@@ -10,7 +10,7 @@ import caseapp.core.parser.Parser
 import caseapp.core.app.{Command, CommandsEntryPoint}
 import esw.constants.CommonTimeouts
 import esw.http.template.wiring.ServerWiring
-import org.tmt.$name;format="space,Camel"$.impl.$name;format="space,Camel"$Wiring
+import org.tmt.$name;format="lower,word"$.impl.$name;format="space,Camel"$Wiring
 
 import scala.concurrent.Await
 import scala.util.control.NonFatal
@@ -18,7 +18,7 @@ import scala.util.control.NonFatal
 object $name;format="space,Camel"$App extends CommandsEntryPoint {
   private val appName: String = getClass.getSimpleName.dropRight(1)
   private val appVersion: String = "0.1.0"
-  override def progName: String = "$name;format="space,Camel"$"
+  override def progName: String = "$name;format="lower,word"$"
 
   private val StartCommand: Runner[StartOptions] = Runner[StartOptions]()
   override def commands: Seq[Command[?]] = List(StartCommand)
