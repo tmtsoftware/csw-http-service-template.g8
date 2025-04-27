@@ -26,7 +26,7 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.Await
 
 class $name;format="space,Camel"$AppIntegrationTest extends ScalaTestFrameworkTestKit with AnyWordSpecLike with Matchers with HttpCodecs {
-  import frameworkTestKit._
+  import frameworkTestKit.*
  
   override implicit val patienceConfig: PatienceConfig = PatienceConfig(10.seconds)
 
