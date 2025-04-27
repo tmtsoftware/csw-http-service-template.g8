@@ -2,12 +2,12 @@ package org.tmt.$name;format="lower,word"$.integration
 
 import org.apache.pekko.http.scaladsl.Http
 import org.apache.pekko.http.scaladsl.model.Uri.Path
-import org.apache.pekko.http.scaladsl.model._
+import org.apache.pekko.http.scaladsl.model.*
 import org.apache.pekko.http.scaladsl.model.headers.{Authorization, OAuth2BearerToken}
 import org.apache.pekko.http.scaladsl.unmarshalling.Unmarshal
 import csw.aas.core.commons.AASConnection
 import csw.location.api.models.Connection.HttpConnection
-import csw.location.api.models._
+import csw.location.api.models.*
 import csw.network.utils.Networks
 import csw.testkit.scaladsl.ScalaTestFrameworkTestKit
 import io.bullet.borer.Json
@@ -21,6 +21,7 @@ import org.tmt.$name;format="lower,word"$.impl.$name;format="space,Camel"$Wiring
 import org.tmt.$name;format="lower,word"$.core.models.{AdminGreetResponse, GreetResponse, UserInfo}
 import org.tmt.$name;format="lower,word"$.http.HttpCodecs
 
+import scala.compiletime.uninitialized
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.Await
 
@@ -35,9 +36,9 @@ class $name;format="space,Camel"$AppIntegrationTest extends ScalaTestFrameworkTe
   val $name;format="space,camel"$Wiring                     = new $name;format="space,Camel"$Wiring(Some($name;format="space,camel"$AppPort))
   val appConnection: HttpConnection    = $name;format="space,camel"$Wiring.settings.httpConnection
 
-  var appLocation: HttpLocation  = _
-  var appUri: Uri                = _
-  var keycloakHandle: StopHandle = _
+  var appLocation: HttpLocation  = uninitialized
+  var appUri: Uri                = uninitialized
+  var keycloakHandle: StopHandle = uninitialized
 
   protected override def beforeAll(): Unit = {
     super.beforeAll()
@@ -61,7 +62,7 @@ class $name;format="space,Camel"$AppIntegrationTest extends ScalaTestFrameworkTe
       resolvedLocation.get.connection should ===(appConnection)
     }
 
-    "should call greeting and return GreetResponse as a result" in {
+    "call greeting and return GreetResponse as a result" in {
       val userInfo = UserInfo("John", "Smith")
       val request = HttpRequest(
         HttpMethods.POST,
@@ -74,7 +75,7 @@ class $name;format="space,Camel"$AppIntegrationTest extends ScalaTestFrameworkTe
       Unmarshal(response).to[GreetResponse].futureValue should ===(GreetResponse(s"Hello user: \${userInfo.firstName} \${userInfo.lastName}!!!"))
     }
 
-    "should call adminGreeting and return AdminGreetResponse as a result" in {
+    "call adminGreeting and return AdminGreetResponse as a result" in {
       val token    = getToken("admin", "password1")()
       val userInfo = UserInfo("John", "Smith")
       val request = HttpRequest(
@@ -92,7 +93,7 @@ class $name;format="space,Camel"$AppIntegrationTest extends ScalaTestFrameworkTe
       )
     }
 
-    "should call adminGreeting and return 403 as a result without required role" in {
+    "call adminGreeting and return 403 as a result without required role" in {
       val token    = getToken("nonAdmin", "password2")()
       val userInfo = UserInfo("John", "Smith")
       val request = HttpRequest(
@@ -118,8 +119,8 @@ class $name;format="space,Camel"$AppIntegrationTest extends ScalaTestFrameworkTe
         Realm(
           name = "TMT",
           users = Set(
-            ApplicationUser("admin", "password1", realmRoles = Set(eswUserRole, eswAdminRole)),
-            ApplicationUser("nonAdmin", "password2")
+            ApplicationUser("admin", "password1", "admin", "admin", "admin@tmt.org", realmRoles = Set(eswUserRole, eswAdminRole)),
+            ApplicationUser("nonAdmin", "password2", "nonAdmin", "nonAdmin", "nonAdmin@tmt.org")
           ),
           clients = Set(locationServerClient),
           realmRoles = Set(eswUserRole, eswAdminRole)
